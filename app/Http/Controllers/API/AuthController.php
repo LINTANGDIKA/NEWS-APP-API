@@ -24,7 +24,8 @@ class AuthController extends Controller
         $data['password'] = Hash::make($data['password']);
         User::create($data);
         $response = [
-            'message' => 'Success Registration, Login Now!'
+            'status' => 'Success',
+            'messages' => 'Success Registration, Login Now!'
         ];
         return response($response, 201);
     }
@@ -36,16 +37,18 @@ class AuthController extends Controller
         ]);
         $checkEmail = User::where('email', $data['email'])->first();
         $checkPassword = Hash::check($data['password'], $checkEmail->password);
-        $token = $checkEmail->createToken('logintoken')->plainTextToken;
         if (!$checkEmail || !$checkPassword) {
             $response = [
-                'messages' => ' Wrong Password OR email!'
+                'status' => 'Gagal',
+                'messages' => 'Wrong Password OR email!'
             ];
 
             return response($response, 200);
         } else {
             $response = [
-                'messages' => 'You Succesfully Login'
+                'status' => 'Success',
+                'messages' => 'You Succesfully Login',
+                'data' => $checkEmail
             ];
 
             return response($response, 200);
